@@ -1,0 +1,37 @@
+__author__ = 'nickwasy'
+
+import math
+import random
+
+# returns the number of digits in n
+def digits(n):
+    if n == 0:
+        return 1
+    total = 0
+    while n > 0:
+        n = math.floor(n / 10)
+        total += 1
+    return total
+
+# performs Karatsuba multiplication on integers m and n and returns the result
+def multiply(m, n):
+    if digits(m) == 1 and digits(n) == 1:
+        return m * n
+
+    a = m // (10 ** math.ceil((digits(m) / 2)))     # written left to right, m = ab
+    b = m % (10 ** (math.ceil(digits(m) / 2)))
+    c = n // (10 ** math.ceil((digits(n) / 2)))     # written left to right, n = cd
+    d = n % (10 ** (math.ceil(digits(n) / 2)))
+
+    sum_1 = (10 ** math.ceil(digits(m) / 2)) * multiply(a, d)
+    sum_2 = (10 ** math.ceil(digits(n) / 2)) * multiply(b, c)
+    sum_3 = (10 ** (math.ceil((digits(m)/2)) + math.ceil(digits(n)/2))) * multiply(a, c)
+    sum_4 = multiply(b, d)
+
+    return sum_1 + sum_2 + sum_3 + sum_4
+
+# tests two random integers
+def test():
+    m = random.randrange(0, 10000)
+    n = random.randrange(0, 10000)
+    assert multiply(m, n) == m * n
